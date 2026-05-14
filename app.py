@@ -11,13 +11,14 @@ from price_data import get_price_history, get_indicators, to_yahoo_ticker
 
 load_dotenv()
 
+st.set_page_config(page_title="T212 Dashboard", page_icon="📈", layout="wide")
+
 # Support both local .env and Streamlit Cloud secrets
 def _default_api_key() -> str:
-    if "T212_API_KEY" in st.secrets:
-        return st.secrets["T212_API_KEY"]
-    return os.getenv("T212_API_KEY", "")
-
-st.set_page_config(page_title="T212 Dashboard", page_icon="📈", layout="wide")
+    try:
+        return st.secrets.get("T212_API_KEY", "") or os.getenv("T212_API_KEY", "")
+    except Exception:
+        return os.getenv("T212_API_KEY", "")
 
 # ── Sidebar ───────────────────────────────────────────────────────────────────
 with st.sidebar:
